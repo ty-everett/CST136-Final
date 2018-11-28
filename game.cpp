@@ -333,9 +333,34 @@ void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & ch
 			character.Display();
 			cout << endl;
 			cout << "     [ A ] NORMAL ATTACK     [ D ] BLOCK     [ B ] BERSERK" << endl;
-			GetChar(); // TODO implement keys
+			char response = GetChar();
+			while (
+				response != 'A' &&
+				response != 'a' &&
+				response != 'D' &&
+				response != 'd' &&
+				response != 'B' &&
+				response != 'b'
+				)
+			{
+				response = GetChar();
+			}
 			ClearConsole();
-			character.FightAttack(*enemies[i]);
+			switch (response)
+			{
+			case 'A':
+			case 'a':
+				character.FightAttack(*enemies[i]);
+				break;
+			case 'D':
+			case 'd':
+				character.FightBlock(*enemies[i]);
+				break;
+			case 'B':
+			case 'b':
+				character.FightBerserk(*enemies[i]);
+				break;
+			}
 			SaveCharacters(characters);
 			SaveEnemies(enemies);
 			cout << endl << "                         Press {  SPACE  } to continue" << endl;
@@ -354,14 +379,18 @@ void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & ch
 		GetChar();
 		ClearConsole();
 	}
+	ClearConsole();
 	if (character.GetHealth() == 0)
 	{
-		ClearConsole();
 		cout << "Character has been defeated." << endl;
 		cout << "Generate new character or use other character to fight." << endl;
-		cout << "Press {  SPACE  } to go back." << endl;
-		GetChar();
 	}
+	else
+	{
+		cout << "Character has defeated all enemies." << endl;
+	}
+	cout << "Press {  SPACE  } to go back." << endl;
+	GetChar();
 }
 
 void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index)
