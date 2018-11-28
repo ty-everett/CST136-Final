@@ -10,7 +10,12 @@
 #include "zombie.h"
 
 /* Purpose: zombie constructor */
-Zombie::Zombie() : Enemy("Zombie", 15)
+Zombie::Zombie() : Enemy("Zombie", 15, Enemies::ZOMBIE)
+{
+}
+
+/* Purpose: zombie constructor */
+Zombie::Zombie(SerializedData & data) : Enemy(data, Enemies::ZOMBIE)
 {
 }
 

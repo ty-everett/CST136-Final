@@ -23,7 +23,7 @@ using std::endl;
 *     A default object is constructed. By default the character has an empty
 *     BackPack, an empty CoinPouch, and the name "Character".
 ***************************************/
-Character::Character() : m_backPack(), m_coinPouch(), m_name("Character")
+Character::Character() : m_backPack(), m_coinPouch(), m_name("Character"), m_health(100), m_armor(2), m_attack(5)
 {
 }
 
@@ -35,8 +35,50 @@ Character::Character() : m_backPack(), m_coinPouch(), m_name("Character")
 * Postcondition:
 *	  Deserialized object is constructed
 ***************************************/
-Character::Character(SerializedData & data) : m_name(data), m_backPack(data), m_coinPouch(data)
+Character::Character(SerializedData & data) : m_name(data), m_backPack(data), m_coinPouch(data), m_health(0), m_armor(0), m_attack(0)
 {
+	char length[10];
+	int offset = 0;
+	bool loop = true;
+	do
+	{
+		length[offset] = data.ReadCharacter();
+		if (length[offset] == '|')
+		{
+			length[offset] = '\0';
+			loop = false;
+		}
+		offset++;
+	} while (loop);
+	m_health = atoi(length);
+	
+	offset = 0;
+	loop = true;
+	do
+	{
+		length[offset] = data.ReadCharacter();
+		if (length[offset] == '|')
+		{
+			length[offset] = '\0';
+			loop = false;
+		}
+		offset++;
+	} while (loop);
+	m_armor = atoi(length);
+
+	offset = 0;
+	loop = true;
+	do
+	{
+		length[offset] = data.ReadCharacter();
+		if (length[offset] == '|')
+		{
+			length[offset] = '\0';
+			loop = false;
+		}
+		offset++;
+	} while (loop);
+	m_attack = atoi(length);
 }
 
 /***************************************
@@ -47,7 +89,7 @@ Character::Character(SerializedData & data) : m_name(data), m_backPack(data), m_
 * Postcondition:
 *     A new Character is created with appropriate attributes
 ***************************************/
-Character::Character(String name, BackPack backPack, CoinPouch coinPouch) : m_name(name), m_backPack(backPack), m_coinPouch(coinPouch)
+Character::Character(String name, BackPack backPack, CoinPouch coinPouch) : m_name(name), m_backPack(backPack), m_coinPouch(coinPouch), m_health(100), m_armor(2), m_attack(5)
 {
 }
 
@@ -59,7 +101,7 @@ Character::Character(String name, BackPack backPack, CoinPouch coinPouch) : m_na
 * Postcondition:
 *     A new Character with the same attributes as the provided is generated
 ***************************************/
-Character::Character(Character & obj) : m_name(obj.m_name), m_backPack(obj.m_backPack), m_coinPouch(obj.m_coinPouch)
+Character::Character(Character & obj) : m_name(obj.m_name), m_backPack(obj.m_backPack), m_coinPouch(obj.m_coinPouch), m_health(obj.m_health), m_armor(obj.m_armor), m_attack(obj.m_attack)
 {
 }
 
@@ -78,6 +120,9 @@ Character & Character::operator = (Character & rhs)
 		m_name = rhs.m_name;
 		m_backPack = rhs.m_backPack;
 		m_coinPouch = rhs.m_coinPouch;
+		m_health = rhs.m_health;
+		m_armor = rhs.m_armor;
+		m_attack = rhs.m_attack;
 	}
 	return *this;
 }
@@ -186,8 +231,8 @@ void Character::SetName(String name)
 ***************************************/
 void Character::Display()
 {
-	cout << "Character Properties:" << endl;
-	cout << "Character name: " << m_name << endl;
+	cout << "                         Character name: " << m_name << endl << endl;
+	cout << "                Health: " << m_health << "	Armor: " << m_armor << "	Attack: " << m_attack << endl << endl;
 	m_backPack.PrintInventory();
 	m_coinPouch.Display();
 }
@@ -205,5 +250,47 @@ SerializedData Character::Serialize()
 	SerializedData s(m_name.Serialize());
 	s.Add(m_backPack.Serialize());
 	s.Add(m_coinPouch.Serialize());
+	s.Add(std::to_string(m_health).c_str());
+	s.Add("|");
+	s.Add(std::to_string(m_armor).c_str());
+	s.Add("|");
+	s.Add(std::to_string(m_attack).c_str());
+	s.Add("|");
 	return s;
+}
+
+/* purpuse fight normal */
+void Character::FightAttack(Enemy & enemy)
+{
+	cout << "Character attacks " << enemy.GetName() << "..." << endl;
+	enemy.Damage(m_attack);
+	if (enemy.GetHealth() == 0)
+	{
+		cout << "Character slays " << enemy.GetName() << "!" << endl;
+	}
+	else
+	{
+		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
+		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
+		int damage = (int)((enemy.Attack() * (1 - (m_armor / 10.0f))) + 0.5f);
+		Damage(damage);
+		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		if (m_health == 0)
+		{
+			cout << enemy.GetName() << " has slain Character!" << endl;
+		}
+		else
+		{
+			cout << "Character now has " << m_health << " health!" << endl;
+		}
+	}
+}
+
+void FightBlock(Enemy & enemy);
+void FightBerserk(Enemy & enemy);
+
+/* purpose to damage character without negative health */
+void Character::Damage(int damn)
+{
+	m_health - damn > 0 ? m_health -= damn : m_health = 0;
 }

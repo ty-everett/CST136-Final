@@ -19,6 +19,7 @@ class Zombie : public Enemy
 {
 public:
 	Zombie();
+	Zombie(SerializedData & data);
 	~Zombie();
 	int Attack();
 };

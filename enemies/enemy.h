@@ -10,30 +10,6 @@
 #pragma once
 
 #include "../string.h"
-/***************************************
-* Class:
-*     Enemy
-* Purpose:
-*     Provide an abstract interface for enemies so they can go in arrays
-***************************************/
-class Enemy
-{
-private:
-	String m_name;
-	int m_health;
-public:
-	Enemy();
-	Enemy(String name, int health);
-	Enemy(const Enemy & obj);
-	Enemy & operator = (const Enemy & rhs);
-	~Enemy();
-	void Display();
-	virtual int Attack() = 0;
-	String & GetName();
-	int GetHealth();
-	void SetName(String name);
-	void SetHealth(int health);
-};
 
 // define an identifier for each type of enemy
 enum Enemies {
@@ -47,5 +23,34 @@ enum Enemies {
 	DRAGON,
 	GHAST,
 	SLIME
+};
+
+/***************************************
+* Class:
+*     Enemy
+* Purpose:
+*     Provide an abstract interface for enemies so they can go in arrays
+***************************************/
+class Enemy
+{
+private:
+	String m_name;
+	int m_health;
+	int m_type;
+public:
+	Enemy();
+	Enemy(String name, int health, int type);
+	Enemy(const Enemy & obj);
+	Enemy(SerializedData & data, int type);
+	Enemy & operator = (const Enemy & rhs);
+	~Enemy();
+	void Display();
+	virtual int Attack() = 0;
+	String & GetName();
+	int GetHealth();
+	void SetName(String name);
+	void SetHealth(int health);
+	SerializedData Serialize();
+	void Damage(int hits);
 };
 

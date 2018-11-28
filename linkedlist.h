@@ -307,7 +307,7 @@ T & LinkedList<T>::Get(int index)
 	{
 		throw ITEM_NOT_FOUNT_EXCEPTION;
 	}
-	else
+ 	else
 	{
 		return previusNode->m_data;
 	}

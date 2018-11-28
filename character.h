@@ -13,6 +13,7 @@
 #include "BackPack.h"
 #include "CoinPouch.h"
 #include "SerializedData.h"
+#include "enemies/enemy.h"
 
 /***************************************
 * Class:
@@ -24,6 +25,9 @@ class Character
 {
 private:
 	String m_name;
+	int m_health;
+	int m_armor;
+	int m_attack;
 	BackPack m_backPack;
 	CoinPouch m_coinPouch;
 public:
@@ -41,5 +45,9 @@ public:
 	void SetName(String name);
 	void Display();
 	SerializedData Serialize();
+	void FightAttack(Enemy & enemy);
+	void FightBlock(Enemy & enemy);
+	void FightBerserk(Enemy & enemy);
+	void Damage(int damn);
 };
 

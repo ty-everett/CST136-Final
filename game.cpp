@@ -49,6 +49,7 @@ void ViewEnemies(Enemy * enemies[]);
 char GetChar();
 bool GetYesNo(char * query);
 void ClearConsole();
+void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index);
 
 enum State {
 	MENU,
@@ -108,16 +109,25 @@ int main()
 		{
 			Character selected = SelectCharacter(characters);
 			Battle(selected, enemies);
+			state = State::MENU;
 			break;
 		}
 		case State::ENEMIES :
 			ViewEnemies(enemies);
+			state = State::MENU;
 			break;
 		case State::CREDITS :
 			ShowCredits();
 			state = State::MENU;
 			break;
 		}
+	}
+	SaveCharacters(characters);
+	//SaveEnemies(enemies);
+	// deallocate dynamic memory
+	for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
+	{
+		delete enemies[i];
 	}
 	return 0;
 #endif
@@ -153,10 +163,10 @@ Character & SelectCharacter(LinkedList<Character> & characters)
 	while (selected == false)
 	{
 		ClearConsole();
-		cout << endl << "                            Displaying character { "
-			<< (currentCharacter + 1) << " } of { " << (characters.GetLength() + 1)
+		cout << endl << "                         Displaying character { "
+			<< (currentCharacter + 1) << " } of { " << characters.GetLength()
 			<< " }" << endl << endl;
-		characters.Get(selected).Display();
+		characters.Get(currentCharacter).Display();
 		cout << endl;
 		if (currentCharacter > 0)
 		{
@@ -168,7 +178,7 @@ Character & SelectCharacter(LinkedList<Character> & characters)
 		}
 		cout << " [ G ] GENERATE NEW ";
 		cout << "    [ B ] BATTLE    ";
-		if (currentCharacter < characters.GetLength())
+		if (currentCharacter < characters.GetLength() - 1)
 		{
 			cout << "       [ N > NEXT   ";
 		}
@@ -199,7 +209,7 @@ Character & SelectCharacter(LinkedList<Character> & characters)
 			break;
 		case 'N' :
 		case 'n' :
-			currentCharacter < characters.GetLength() && currentCharacter++;
+			currentCharacter < characters.GetLength() - 1 && currentCharacter++;
 			break;
 		case 'B' :
 		case 'b' :
@@ -263,7 +273,7 @@ void PopulateEnemies(Enemy * enemies[])
 		SerializedData s(contents.c_str());
 		for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
 		{
-			enemies[i] = new Zombie(); // TODO enemy type identification, serialization functions, deserialization ctors for all enemy types
+			ClassifyEnemy(s, enemies, i);
 		}
 	}
 	else // file did not exist and we need to create it with defaults
@@ -271,27 +281,76 @@ void PopulateEnemies(Enemy * enemies[])
 		for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
 		{
 			// TODO call the RNG
-			Zombie newZombie;
-			enemies[i] = &newZombie;
+			enemies[i] = new Zombie;
 		}
 	}
 	f.close();
 }
 
-void ViewEneemies(Enemy * enemies[])
+void ViewEnemies(Enemy * enemies[])
 {
-	cout << "Enemies:" << endl;
+	ClearConsole();
+	cout << "\n = - - - - - - - - > > >          YOUR ENEMIES          < < < - - - - - - - - = \n\n";
 	for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
 	{
 		enemies[i]->Display();
 	}
+	cout << "\n\n                          To go back to the main menu, press\n\n";
+	cout << "                                   {  SPACE  }" << endl;
+	GetChar();
 }
 
-void SaveCharacters()
+void SaveCharacters(LinkedList<Character> & characters)
 {
 	fstream f("characters.bin", ios::binary | ios::out | ios::trunc);
-	
+	SerializedData s = characters.Serialize();
+	f.write(s, s);
 	f.close();
+}
+
+void SaveEnemies(Enemy * enemies[])
+{
+	fstream f("enemies.bin", ios::binary | ios::out | ios::trunc);
+	for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
+	{
+		SerializedData s = enemies[i]->Serialize();
+		f.write(s, s);
+	}
+	f.close();
+}
+
+void Battle(Character & character, Enemy * enemies[])
+{
+	ClearConsole();
+	cout << "you win" << endl;
+	GetChar();
+}
+
+void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index)
+{
+	char length[10];
+	int offset = 0;
+	bool loop = true;
+	do
+	{
+		length[offset] = s.ReadCharacter();
+		if (length[offset] == '|')
+		{
+			length[offset] = '\0';
+			loop = false;
+		}
+		offset++;
+	} while (loop);
+	int ID = atoi(length);
+	switch (ID)
+	{
+	case Enemies::ZOMBIE :
+		enemies[index] = new Zombie(s);
+		break;
+	//case Enemies::SKELETON :
+	//	break;
+	//	...
+	}
 }
 
 char GetChar()
