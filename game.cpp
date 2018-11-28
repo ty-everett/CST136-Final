@@ -44,7 +44,7 @@ void PopulateCharacters(LinkedList<Character> & characters);
 void PopulateEnemies(Enemy * enemies[]);
 void SaveCharacters(LinkedList<Character> & characters);
 void SaveEnemies(Enemy * enemies[]);
-void Battle(Character & player, Enemy * enemies[]);
+void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & characters);
 void ViewEnemies(Enemy * enemies[]);
 char GetChar();
 bool GetYesNo(char * query);
@@ -107,8 +107,7 @@ int main()
 			break;
 		case State::CHARACTERS :
 		{
-			Character selected = SelectCharacter(characters);
-			Battle(selected, enemies);
+			Battle(SelectCharacter(characters), enemies, characters);
 			state = State::MENU;
 			break;
 		}
@@ -123,7 +122,7 @@ int main()
 		}
 	}
 	SaveCharacters(characters);
-	//SaveEnemies(enemies);
+	SaveEnemies(enemies);
 	// deallocate dynamic memory
 	for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
 	{
@@ -148,11 +147,13 @@ void ShowCredits()
 {
 	ClearConsole();
 	cout << endl
-		<< " = - - - - - - - - > > >          ARENA BATTLE          < < < - - - - - - - - = " << endl << endl
-		<< "                            Developer:   Tyler Sands" << endl
-		<< "                              License:   MIT" << endl
-		<< "                           Instructor:   Troy Scevers" << endl << endl
-		<< "                              PRESS SPACE TO GO BACK" << endl;
+		<< " = - - - - - - - - > > >          GAME CREDITS          < < < - - - - - - - - = " << endl << endl
+		<< "                  Developer:             Tyler Sands" << endl << endl
+		<< "                    License:             MIT    ( sorry OIT )" << endl << endl
+		<< "                  Copyright:             2018 Tyler Sands, No rights reserved." << endl << endl
+		<< "    Character & Enemy names:             Minecraft (before Micro$OPT broke it)" << endl << endl
+		<< "                 Instructor:             Troy Scevers" << endl << endl << endl
+		<< "                           Press {  SPACE  } to go back" << endl;
 	GetChar();
 }
 
@@ -319,11 +320,48 @@ void SaveEnemies(Enemy * enemies[])
 	f.close();
 }
 
-void Battle(Character & character, Enemy * enemies[])
+void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & characters)
 {
 	ClearConsole();
-	cout << "you win" << endl;
-	GetChar();
+	for (int i = 0; i < NUMBER_OF_ENEMIES && character.GetHealth() > 0; i++)
+	{
+		while (character.GetHealth() != 0 && enemies[i]->GetHealth() != 0) // keep fighting till one dies
+		{
+			cout << endl << "                    Battling enemy { " << i + 1 << " } of { " << NUMBER_OF_ENEMIES << " }" << endl << endl;
+			enemies[i]->Display();
+			cout << endl;
+			character.Display();
+			cout << endl;
+			cout << "     [ A ] NORMAL ATTACK     [ D ] BLOCK     [ B ] BERSERK" << endl;
+			GetChar(); // TODO implement keys
+			ClearConsole();
+			character.FightAttack(*enemies[i]);
+			SaveCharacters(characters);
+			SaveEnemies(enemies);
+			cout << endl << "                         Press {  SPACE  } to continue" << endl;
+			GetChar();
+			ClearConsole();
+		}
+		if (character.GetHealth() == 0)
+		{
+			cout << "Character was defeated by " << enemies[i]->GetName() << "!" << endl;
+		}
+		else
+		{
+			cout << "Character successfully defeated " << enemies[i]->GetName() << "!" << endl;
+		}
+		cout << endl << "                         Press {  SPACE  } to continue" << endl;
+		GetChar();
+		ClearConsole();
+	}
+	if (character.GetHealth() == 0)
+	{
+		ClearConsole();
+		cout << "Character has been defeated." << endl;
+		cout << "Generate new character or use other character to fight." << endl;
+		cout << "Press {  SPACE  } to go back." << endl;
+		GetChar();
+	}
 }
 
 void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index)

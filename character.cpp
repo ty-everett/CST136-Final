@@ -286,11 +286,67 @@ void Character::FightAttack(Enemy & enemy)
 	}
 }
 
-void FightBlock(Enemy & enemy);
-void FightBerserk(Enemy & enemy);
+void Character::FightBlock(Enemy & enemy)
+{
+	cout << "Character uses block move on " << enemy.GetName() << "..." << endl;
+	enemy.Damage((int)(m_attack * 0.7f + 0.5f));
+	if (enemy.GetHealth() == 0)
+	{
+		cout << "Character slays " << enemy.GetName() << "!" << endl;
+	}
+	else
+	{
+		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
+		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
+		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 1.28f))) + 0.5f);
+		Damage(damage);
+		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		if (m_health == 0)
+		{
+			cout << enemy.GetName() << " has slain Character!" << endl;
+		}
+		else
+		{
+			cout << "Character now has " << m_health << " health!" << endl;
+		}
+	}
+}
+
+void Character::FightBerserk(Enemy & enemy)
+{
+	cout << "Character uses BERSERK attack move on " << enemy.GetName() << "..." << endl;
+	enemy.Damage((int)(m_attack * 1.5f + 0.5f));
+	if (enemy.GetHealth() == 0)
+	{
+		cout << "Character slays " << enemy.GetName() << "!" << endl;
+	}
+	else
+	{
+		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
+		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
+		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 0.8f))) + 0.5f);
+		Damage(damage);
+		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		if (m_health == 0)
+		{
+			cout << enemy.GetName() << " has slain Character!" << endl;
+		}
+		else
+		{
+			cout << "Character now has " << m_health << " health!" << endl;
+		}
+	}
+}
+
 
 /* purpose to damage character without negative health */
 void Character::Damage(int damn)
 {
 	m_health - damn > 0 ? m_health -= damn : m_health = 0;
+}
+
+/* Purpose: To return the health variable. */
+int Character::GetHealth()
+{
+	return m_health;
 }

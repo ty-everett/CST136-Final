@@ -49,5 +49,6 @@ public:
 	void FightBlock(Enemy & enemy);
 	void FightBerserk(Enemy & enemy);
 	void Damage(int damn);
+	int GetHealth();
 };
 
