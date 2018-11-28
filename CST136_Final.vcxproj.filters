@@ -63,6 +63,9 @@
     <ClCompile Include="zombie.cpp">
       <Filter>Source Files\enemies</Filter>
     </ClCompile>
+    <ClCompile Include="skeleton.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="node.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files\enemies</Filter>
     </ClInclude>
     <ClInclude Include="zombie.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
       <Filter>Header Files\enemies</Filter>
     </ClInclude>
   </ItemGroup>

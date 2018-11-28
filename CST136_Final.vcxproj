@@ -123,6 +123,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="potion.cpp" />
     <ClCompile Include="serializeddata.cpp" />
+    <ClCompile Include="skeleton.cpp" />
     <ClCompile Include="string.cpp" />
     <ClCompile Include="tests\linkedlisttests.cpp" />
     <ClCompile Include="tests\tests.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="node.h" />
     <ClInclude Include="potion.h" />
     <ClInclude Include="serializeddata.h" />
+    <ClInclude Include="skeleton.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="tests\linkedlisttests.h" />
     <ClInclude Include="tests\tests.h" />

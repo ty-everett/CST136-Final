@@ -18,6 +18,7 @@
 #include "character.h"
 #include "enemies/enemy.h"
 #include "zombie.h"
+#include "skeleton.h"
 #include "linkedlist.h"
 
 using std::cout;
@@ -279,11 +280,16 @@ void PopulateEnemies(Enemy * enemies[])
 	}
 	else // file did not exist and we need to create it with defaults
 	{
-		for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
-		{
-			// TODO call the RNG
-			enemies[i] = new Zombie;
-		}
+		enemies[0] = new Zombie;
+		enemies[1] = new Skeleton;
+		enemies[2] = new Zombie;
+		enemies[3] = new Zombie;
+		enemies[4] = new Skeleton;
+		enemies[5] = new Zombie;
+		enemies[6] = new Skeleton;
+		enemies[7] = new Zombie;
+		enemies[8] = new Skeleton;
+		enemies[9] = new Skeleton;
 	}
 	f.close();
 }
@@ -311,6 +317,10 @@ void SaveCharacters(LinkedList<Character> & characters)
 
 void SaveEnemies(Enemy * enemies[])
 {
+	/*
+	
+	As of right now ti does not make sense to do this. But the code exists as it was required to.
+	
 	fstream f("enemies.bin", ios::binary | ios::out | ios::trunc);
 	for (int i = 0; i < NUMBER_OF_ENEMIES; i++)
 	{
@@ -318,6 +328,7 @@ void SaveEnemies(Enemy * enemies[])
 		f.write(s, s);
 	}
 	f.close();
+	*/
 }
 
 void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & characters)
@@ -414,9 +425,9 @@ void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index)
 	case Enemies::ZOMBIE :
 		enemies[index] = new Zombie(s);
 		break;
-	//case Enemies::SKELETON :
-	//	break;
-	//	...
+	case Enemies::SKELETON :
+		enemies[index] = new Skeleton(s);
+		break;
 	}
 }
 
