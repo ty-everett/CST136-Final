@@ -15,6 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <ctime>
 #include "character.h"
 #include "enemies/enemy.h"
 #include "zombie.h"
@@ -30,6 +31,7 @@
 #include "linkedlist.h"
 
 using std::cout;
+using std::cin;
 using std::fstream;
 using std::ios;
 using std::endl;
@@ -48,7 +50,6 @@ void PrintMainMenu();
 void ShowCredits();
 Character & SelectCharacter(LinkedList<Character> & characters);
 void AddCharacter(LinkedList<Character> & characters);
-Character GenerateRandomCharacter();
 void PopulateCharacters(LinkedList<Character> & characters);
 void PopulateEnemies(Enemy * enemies[]);
 void SaveCharacters(LinkedList<Character> & characters);
@@ -56,7 +57,7 @@ void SaveEnemies(Enemy * enemies[]);
 void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & characters);
 void ViewEnemies(Enemy * enemies[]);
 char GetChar();
-bool GetYesNo(char * query);
+bool GetYesNo(const char * query);
 void ClearConsole();
 void ClassifyEnemy(SerializedData & s, Enemy * enemies[], int index);
 
@@ -93,6 +94,8 @@ int main()
 #ifdef RUN_TESTS_AND_EXIT
 	return TestGame();
 #else
+	// initialize the PRNG
+	srand(time(NULL));
 	// declare data structures
 	LinkedList<Character> characters;
 	PopulateCharacters(characters);
@@ -280,7 +283,7 @@ Character & SelectCharacter(LinkedList<Character> & characters)
 
 /***************************************
 * Purpose:
-*     Generates random characters using the GenerateRandomCharacter function until the user is satisfied
+*     Generates random characters until the user is satisfied
 *		with the result. When satisfied, the user is asked to enter a name. The name is set and the
 *		character is then added to the  LinkedList of characters.
 * Precondition:
@@ -291,27 +294,30 @@ Character & SelectCharacter(LinkedList<Character> & characters)
 ***************************************/
 void AddCharacter(LinkedList<Character> & characters)
 {
-	ClearConsole();
-	cout << "Add character TODO" << endl;
-	GetChar();
-}
-
-/***************************************
-* Purpose:
-*     Returns a character with random values for health, armor and attack. The name of the character is
-*		"Character". The character has an empty BackPack and CoinPouch. This is used by the AddCharacter
-*		function. If the user likes the character's attributes, they will be able to give the character a
-*		unique name from the AddCharacter function. Otherwise, they can choose to call this function again
-*		and generate a new character.
-* Precondition:
-*     Random character attributes are required by the AddCharacter function
-* Postcondition:
-*     Character with random attributes and generic name is provided.
-***************************************/
-Character GenerateRandomCharacter()
-{
-	Character c;
-	return c;
+	bool added = false;
+	while (added == false)
+	{
+		ClearConsole();
+		Character c;
+		c.SetHealth(rand() % 160 + 40);
+		c.SetArmor(rand() % 4);
+		c.SetAttack(rand() % 20 + 5);
+		cout << endl << "               A random character has been generated: " << endl << endl;
+		c.Display();
+		if (GetYesNo("Keep this character?"))
+		{
+			std::string input = "\0";
+			cout << "Enter name for your new character: " << endl;
+			while (input == "\0")
+			{
+				getline(cin, input);
+			}
+			c.SetName(input.c_str());
+			characters.Add(c);
+			SaveCharacters(characters);
+			added = true;
+		}
+	}
 }
 
 /***************************************
@@ -388,6 +394,13 @@ void PopulateEnemies(Enemy * enemies[])
 	f.close();
 }
 
+/***************************************
+* Purpose:
+*     Displays a table of all enemies in the array of enemies to the user
+* Precondition:
+*     The array of enemies to display is provided. This is executed when the second menu option is selected
+*		on the title screen.
+***************************************/
 void ViewEnemies(Enemy * enemies[])
 {
 	ClearConsole();
@@ -515,11 +528,11 @@ void Battle(Character & character, Enemy * enemies[], LinkedList<Character> & ch
 		}
 		if (character.GetHealth() == 0)
 		{
-			cout << "Character was defeated by " << enemies[i]->GetName() << "!" << endl;
+			cout << "Character was defeated by " << enemies[i]->GetName() << endl;
 		}
 		else
 		{
-			cout << "Character successfully defeated " << enemies[i]->GetName() << "!" << endl;
+			cout << "Character successfully defeated " << enemies[i]->GetName() << endl;
 		}
 		cout << endl << "                         Press {  SPACE  } to continue" << endl;
 		GetChar();
@@ -630,7 +643,7 @@ char GetChar()
 * Postcondition:
 *     A boolean value indicating user intent is returned
 ***************************************/
-bool GetYesNo(char * query)
+bool GetYesNo(const char * query)
 {
 	cout << query << " (Y/N): ";
 	char input = GetChar();

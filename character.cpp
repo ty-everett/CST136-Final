@@ -280,7 +280,7 @@ void Character::FightAttack(Enemy & enemy)
 		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
 		int damage = (int)((enemy.Attack() * (1 - (m_armor / 10.0f))) + 0.5f);
 		Damage(damage);
-		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		cout << enemy.GetName() << " has dealt " << damage << " damage against Character" << endl;
 		if (m_health == 0)
 		{
 			cout << "Character was slain by " << enemy.GetName() << endl;
@@ -295,7 +295,7 @@ void Character::FightAttack(Enemy & enemy)
 /* Purpose: Blocking move (1.5x armor, 0.5x damage)*/
 void Character::FightBlock(Enemy & enemy)
 {
-	cout << "Character uses block move on " << enemy.GetName() << "..." << endl;
+	cout << "Character uses block move on " << enemy.GetName() << endl;
 	enemy.Damage((int)(m_attack * 0.5f + 0.5f));
 	cout << "Character has dealt " << (int)(m_attack * 0.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
 	if (enemy.GetHealth() == 0)
@@ -314,7 +314,6 @@ void Character::FightBlock(Enemy & enemy)
 	}
 	else
 	{
-		cout << "Character has dealt " << (int)(m_attack * 0.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
 		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
 		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 1.5f))) + 0.5f);
 		Damage(damage);
@@ -342,7 +341,7 @@ void Character::FightBerserk(Enemy & enemy)
 		cout << "No health benefits from this kill because character used BERSERK attack!" << endl;
 		if (m_attack < 49)
 		{
-			cout << "Character killed an enemy with BERSERK attack! and has less than 40 attack points!" << endl;
+			cout << "Character killed an enemy with BERSERK and has less than 40 attack points!" << endl;
 			cout << "Character gains 1 attack point!" << endl;
 			m_attack++;
 			cout << "Character's new number of attack points: " << m_attack << endl;
@@ -350,7 +349,6 @@ void Character::FightBerserk(Enemy & enemy)
 	}
 	else
 	{
-		cout << "Character has dealt " << (int)(m_attack * 1.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
 		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
 		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 0.6f))) + 0.5f);
 		Damage(damage);
@@ -377,4 +375,22 @@ void Character::Damage(int damn)
 int Character::GetHealth()
 {
 	return m_health;
+}
+
+/* Purpose: setter */
+void Character::SetHealth(int health)
+{
+	m_health = health;
+}
+
+/* Purpose: setter */
+void Character::SetArmor(int armor)
+{
+	m_armor = armor;
+}
+
+/* Purpose: setter */
+void Character::SetAttack(int attack)
+{
+	m_attack = attack;
 }

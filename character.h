@@ -50,5 +50,8 @@ public:
 	void FightBerserk(Enemy & enemy);
 	void Damage(int damn);
 	int GetHealth();
+	void SetHealth(int health);
+	void SetArmor(int armor);
+	void SetAttack(int attack);
 };
 
