@@ -259,25 +259,31 @@ SerializedData Character::Serialize()
 	return s;
 }
 
-/* purpuse fight normal */
+
+// TODO isolate attack logic into separate function for code reuse
+
+/* Purpuse: Fight function */
 void Character::FightAttack(Enemy & enemy)
 {
-	cout << "Character attacks " << enemy.GetName() << "..." << endl;
+	cout << "Character attacks " << enemy.GetName() << endl;
 	enemy.Damage(m_attack);
+	cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << endl;
 	if (enemy.GetHealth() == 0)
 	{
-		cout << "Character slays " << enemy.GetName() << "!" << endl;
+		cout << "Character slays " << enemy.GetName() << endl;
+		cout << "Character takes 5 health from the fallen enemy" << endl;
+		m_health += 5;
+		cout << "Character now has " << m_health << " health!" << endl;
 	}
 	else
 	{
-		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
-		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
+		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
 		int damage = (int)((enemy.Attack() * (1 - (m_armor / 10.0f))) + 0.5f);
 		Damage(damage);
 		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
 		if (m_health == 0)
 		{
-			cout << enemy.GetName() << " has slain Character!" << endl;
+			cout << "Character was slain by " << enemy.GetName() << endl;
 		}
 		else
 		{
@@ -286,24 +292,36 @@ void Character::FightAttack(Enemy & enemy)
 	}
 }
 
+/* Purpose: Blocking move (1.5x armor, 0.5x damage)*/
 void Character::FightBlock(Enemy & enemy)
 {
 	cout << "Character uses block move on " << enemy.GetName() << "..." << endl;
-	enemy.Damage((int)(m_attack * 0.7f + 0.5f));
+	enemy.Damage((int)(m_attack * 0.5f + 0.5f));
+	cout << "Character has dealt " << (int)(m_attack * 0.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
 	if (enemy.GetHealth() == 0)
 	{
-		cout << "Character slays " << enemy.GetName() << "!" << endl;
+		cout << "Character slays " << enemy.GetName() << endl;
+		cout << "Character gains 10 health killing enemy with a BLOCKING move!" << endl;
+		m_health += 10;
+		if (m_armor < 5)
+		{
+			cout << "Character killed an enemy with defensive move and has less than 5 armor!" << endl;
+			cout << "Character has earned 1 armor point!" << endl;
+			m_armor++;
+			cout << "Character now has " << m_armor << " armor points!" << endl;
+		}
+		cout << "Character now has " << m_health << " health!" << endl;
 	}
 	else
 	{
-		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
-		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
-		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 1.28f))) + 0.5f);
+		cout << "Character has dealt " << (int)(m_attack * 0.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
+		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
+		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 1.5f))) + 0.5f);
 		Damage(damage);
-		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		cout << "Enemy has dealt " << damage << " damage against Character!" << endl;
 		if (m_health == 0)
 		{
-			cout << enemy.GetName() << " has slain Character!" << endl;
+			cout << "Character was slain by " << enemy.GetName() << endl;
 		}
 		else
 		{
@@ -312,24 +330,34 @@ void Character::FightBlock(Enemy & enemy)
 	}
 }
 
+/* Purpose: BERSERK attack (1.5x damage, 0.6x armor) */
 void Character::FightBerserk(Enemy & enemy)
 {
-	cout << "Character uses BERSERK attack move on " << enemy.GetName() << "..." << endl;
+	cout << "Character uses BERSERK attack move on " << enemy.GetName() << endl;
 	enemy.Damage((int)(m_attack * 1.5f + 0.5f));
+	cout << "Character has dealt " << (int)(m_attack * 1.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
 	if (enemy.GetHealth() == 0)
 	{
-		cout << "Character slays " << enemy.GetName() << "!" << endl;
+		cout << "Character slays " << enemy.GetName() << endl;
+		cout << "No health benefits from this kill because character used BERSERK attack!" << endl;
+		if (m_attack < 49)
+		{
+			cout << "Character killed an enemy with BERSERK attack! and has less than 40 attack points!" << endl;
+			cout << "Character gains 1 attack point!" << endl;
+			m_attack++;
+			cout << "Character's new number of attack points: " << m_attack << endl;
+		}
 	}
 	else
 	{
-		cout << "Character has dealt " << m_attack << " damage to " << enemy.GetName() << "!" << endl;
-		cout << enemy.GetName() << "'s health is now " << enemy.GetHealth() << endl;
-		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 0.8f))) + 0.5f);
+		cout << "Character has dealt " << (int)(m_attack * 1.5f + 0.5f) << " damage to " << enemy.GetName() << endl;
+		cout << "Enemy's health is now " << enemy.GetHealth() << endl;
+		int damage = (int)((enemy.Attack() * (1 - ((m_armor / 10.0f) * 0.6f))) + 0.5f);
 		Damage(damage);
-		cout << enemy.GetName() << " has dealt " << damage << " damage against Character..." << endl;
+		cout << enemy.GetName() << " has dealt " << damage << " damage against Character" << endl;
 		if (m_health == 0)
 		{
-			cout << enemy.GetName() << " has slain Character!" << endl;
+			cout << "Character was slain by " << enemy.GetName() << endl;
 		}
 		else
 		{

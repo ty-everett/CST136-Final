@@ -10,7 +10,7 @@
 #include "zombie.h"
 
 /* Purpose: zombie constructor */
-Zombie::Zombie() : Enemy("Zombie", 15, Enemies::ZOMBIE)
+Zombie::Zombie() : Enemy("Zombie      ", 15, Enemies::ZOMBIE)
 {
 }
 

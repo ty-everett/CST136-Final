@@ -66,6 +66,30 @@
     <ClCompile Include="skeleton.cpp">
       <Filter>Source Files\enemies</Filter>
     </ClCompile>
+    <ClCompile Include="spider.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="creeper.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="pig.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="pigman.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="ghast.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="slime.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="villager.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="dragon.cpp">
+      <Filter>Source Files\enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="node.h">
@@ -111,6 +135,30 @@
       <Filter>Header Files\enemies</Filter>
     </ClInclude>
     <ClInclude Include="skeleton.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="spider.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="creeper.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="pig.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="pigman.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="ghast.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="slime.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="villager.h">
+      <Filter>Header Files\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="dragon.h">
       <Filter>Header Files\enemies</Filter>
     </ClInclude>
   </ItemGroup>

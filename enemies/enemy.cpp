@@ -69,7 +69,7 @@ Enemy::~Enemy()
 void Enemy::Display()
 {
 	cout << "	Type:   " << m_name
-		<< "		Health: " << m_health
+		<< "	Health: " << m_health
 		<< "		Strength: " << Attack() << endl;
 }
 

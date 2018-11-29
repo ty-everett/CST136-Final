@@ -10,7 +10,7 @@
 #include "skeleton.h"
 
 /* Purpose: Skeleton constructor */
-Skeleton::Skeleton() : Enemy("Skeleton", 10, Enemies::SKELETON)
+Skeleton::Skeleton() : Enemy("Skeleton    ", 10, Enemies::SKELETON)
 {
 }
 
